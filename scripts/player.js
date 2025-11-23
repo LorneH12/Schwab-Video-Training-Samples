@@ -1,5 +1,4 @@
 // Simple YouTube iframe embed without the YouTube IFrame API.
-// This avoids a lot of edge cases and just uses the standard player.
 
 const SVT_Player = (function () {
   function playVideo(videoId) {
