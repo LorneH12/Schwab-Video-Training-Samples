@@ -1,66 +1,54 @@
-// Basic i18n loader and language switcher
+// Language toggle using data/languages.json
 
-const SVT_I18N = (function () {
-  let messages = {};
-  let currentLang = "en";
+document.addEventListener("DOMContentLoaded", async () => {
+  const select = document.getElementById("language-select");
+  if (!select) return;
 
-  async function loadLanguages() {
-    try {
-      const res = await fetch("data/languages.json");
-      messages = await res.json();
-    } catch (err) {
-      console.error("Failed to load languages.json", err);
-    }
+  const LANG_KEY = "svt-language";
+  let translations = null;
+
+  async function loadTranslations() {
+    const res = await fetch("data/languages.json");
+    if (!res.ok) throw new Error("Failed to load languages.json");
+    translations = await res.json();
   }
 
-  function t(key) {
-    const langPack = messages[currentLang] || messages.en || {};
-    return langPack[key] || messages.en?.[key] || key;
+  function applyLanguage(lang) {
+    if (!translations || !translations[lang]) return;
+    const t = translations[lang];
+
+    const headerTitle = document.querySelector(".header__title");
+    const heroTitle = document.querySelector(".hero__title");
+    const heroSubtitle = document.querySelector(".hero__subtitle");
+    const ctaExplore = document.getElementById("cta-start");
+    const sectionTitle = document.querySelector(".section-title");
+    const noVideos = document.getElementById("no-videos-message");
+
+    if (headerTitle) headerTitle.textContent = t.headerTitle;
+    if (heroTitle) heroTitle.textContent = t.heroTitle;
+    if (heroSubtitle) heroSubtitle.textContent = t.heroSubtitle;
+    if (ctaExplore) ctaExplore.textContent = t.ctaExplore;
+    if (sectionTitle) sectionTitle.textContent = t.sectionTrainingTitle;
+    if (noVideos) noVideos.textContent = t.noVideos;
+
+    document.documentElement.lang = lang;
+    localStorage.setItem(LANG_KEY, lang);
   }
 
-  function applyDir() {
-    const html = document.documentElement;
-    if (currentLang === "ar") {
-      html.setAttribute("dir", "rtl");
-    } else {
-      html.setAttribute("dir", "ltr");
-    }
-  }
+  try {
+    await loadTranslations();
 
-  function applyTranslations() {
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      el.textContent = t(key);
+    const stored = localStorage.getItem(LANG_KEY);
+    const initial = stored && translations[stored] ? stored : "en";
+    select.value = initial;
+    applyLanguage(initial);
+
+    select.addEventListener("change", () => {
+      const lang = select.value;
+      if (!translations[lang]) return;
+      applyLanguage(lang);
     });
+  } catch (err) {
+    console.error("Language init failed:", err);
   }
-
-  async function init() {
-    await loadLanguages();
-
-    const select = document.getElementById("language-select");
-    const storedLang = localStorage.getItem("svt-lang");
-    currentLang = storedLang || "en";
-
-    if (select) {
-      select.value = currentLang;
-      select.addEventListener("change", () => {
-        currentLang = select.value;
-        localStorage.setItem("svt-lang", currentLang);
-        applyDir();
-        applyTranslations();
-      });
-    }
-
-    applyDir();
-    applyTranslations();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
-
-  return {
-    t: (key) => t(key),
-    get lang() {
-      return currentLang;
-    },
-  };
-})();
+});
