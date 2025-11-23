@@ -1,0 +1,31 @@
+/* Theme variables for light and dark modes */
+
+:root {
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f0f3fa;
+  --color-border-subtle: #d4d9e5;
+  --color-primary: #0079c1;
+  --color-primary-soft: rgba(0, 121, 193, 0.08);
+  --color-primary-strong: #005c97;
+  --color-text: #1f2933;
+  --color-text-muted: #5f6c80;
+  --color-accent: #00a0df;
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.12);
+  --radius-card: 18px;
+  --radius-pill: 999px;
+}
+
+html[data-theme="dark"] {
+  --color-bg: #050816;
+  --color-surface: #0b1220;
+  --color-surface-alt: #101827;
+  --color-border-subtle: #1e293b;
+  --color-primary: #38bdf8;
+  --color-primary-soft: rgba(56, 189, 248, 0.14);
+  --color-primary-strong: #0ea5e9;
+  --color-text: #e5e7eb;
+  --color-text-muted: #9ca3af;
+  --color-accent: #22c55e;
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.7);
+}
