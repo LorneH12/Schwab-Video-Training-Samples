@@ -112,7 +112,7 @@ body.dark-theme {
 .btn-primary {
   background: var(--color-accent);
   border-color: var(--color-accent);
-  color: #ffffff;
+  color: #004c87;
 }
 
 .btn-primary:hover {
