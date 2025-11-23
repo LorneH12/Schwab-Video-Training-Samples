@@ -8,11 +8,12 @@ main {
 }
 
 /* --------------------------------------------------------------
-   CONTENT SHELL (area with the Training Library)
+   CONTENT SHELL (Training Library wrapper)
+   Now transparent with no rounded corners
    -------------------------------------------------------------- */
 
 :root {
-  /* Separate shell background colors */
+  /* Kept for flexibility, but content-shell now transparent */
   --shell-bg-light: #ffffff;
   --shell-bg-dark: #020617;
 }
@@ -20,18 +21,18 @@ main {
 .content-shell {
   margin-top: 3rem;
   padding: 2.5rem 0 3.5rem 0;
-  background: var(--shell-bg-light);
-  box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.15);
-  border-radius: 40px 40px 0 0;
+  background: transparent;          /* transparent panel */
+  box-shadow: none;                 /* remove drop shadow */
+  border-radius: 0;                 /* no rounded top */
 }
 
 /* Dark mode variant */
 body.dark-theme .content-shell {
-  background: var(--shell-bg-dark);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+  background: transparent;
+  box-shadow: none;
 }
 
-/* Ensure the grid stays centered inside the shell */
+/* Ensure the grid stays centered */
 .grid-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -39,25 +40,51 @@ body.dark-theme .content-shell {
 }
 
 /* --------------------------------------------------------------
-   HERO / CTA minor layout helpers
-   (main styling is in components.css)
+   HERO / CTA – full width, no rounding on hero container
    -------------------------------------------------------------- */
 
 .hero {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-inline: 2.5rem;
-  padding-top: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: 3rem clamp(1.5rem, 4vw, 3rem);
 }
 
+/* Full-width hero band with centered content */
+.hero-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  border-radius: 0;               /* remove rounded hero card */
+}
+
+/* Keep the image area behaving nicely */
 .hero__image-wrapper {
+  flex: 0 0 48%;
   display: flex;
   justify-content: center;
 }
 
+.hero__image {
+  width: 100%;
+  max-width: 520px;
+  display: block;
+}
+
+/* Text area */
+.hero__content {
+  flex: 1;
+}
+
+/* Ensure CTA text is visible */
+.hero__cta {
+  color: #ffffff;                 /* white CTA text */
+  font-weight: 600;
+}
+
 /* --------------------------------------------------------------
    MODAL & PLAYER LAYOUT
-   (visual design in components.css)
    -------------------------------------------------------------- */
 
 .modal__dialog {
@@ -66,7 +93,7 @@ body.dark-theme .content-shell {
   max-height: calc(100vh - 4rem);
 }
 
-/* Let the player area keep a 16:9 ratio */
+/* 16:9 ratio container */
 .modal__player-container {
   position: relative;
   width: 100%;
@@ -95,17 +122,21 @@ body.dark-theme .content-shell {
    ====================================================================== */
 
 @media (max-width: 900px) {
-  .hero {
-    padding-inline: 1.25rem;
-  }
-
   .grid-section {
     padding-inline: 1.25rem;
   }
 
-  .content-shell {
-    margin-top: 2.3rem;
-    border-radius: 32px 32px 0 0;
+  .hero {
+    padding: 2.5rem 1.25rem 2.75rem;
+  }
+
+  .hero-panel {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero__image-wrapper {
+    flex: 0 0 auto;
   }
 }
 
