@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schwab Video Training Samples</title>
+  <link rel="stylesheet" href="styles/global.css" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/responsive.css" />
+</head>
+<body>
+  <a href="#main" class="skip-link" data-i18n="skipToContent">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header__left">
+      <img src="assets/img/logo-light.svg" alt="Schwab training logo" class="site-logo" />
+      <div>
+        <p class="site-tag" data-i18n="orgName">Charles Schwab</p>
+        <h1 class="site-title" data-i18n="siteTitle">Video Training Samples</h1>
+      </div>
+    </div>
+
+    <div class="site-header__right">
+      <div class="toggle-group" aria-label="Theme" role="group">
+        <button id="theme-toggle" class="icon-button" type="button" aria-pressed="false">
+          <span class="icon-button__icon" aria-hidden="true">☀️</span>
+          <span class="icon-button__label" data-i18n="lightMode">Light</span>
+        </button>
+      </div>
+
+      <label class="language-select-wrapper">
+        <span class="visually-hidden" data-i18n="languageLabel">Language</span>
+        <select id="language-select" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="fr">FR</option>
+          <option value="es">ES</option>
+          <option value="ar">AR</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__content">
+        <h2 id="hero-title" data-i18n="heroTitle">From concept to completion, track and train with video.</h2>
+        <p class="hero__subtitle" data-i18n="heroSubtitle">
+          This template showcases Schwab training videos inside an accessible, multi-language learning experience.
+        </p>
+        <button class="primary-button" id="cta-start" data-i18n="startTraining">
+          Start training
+        </button>
+      </div>
+      <div class="hero__image-wrapper" aria-hidden="true">
+        <img src="assets/img/hero-default.svg" alt="" class="hero__image" />
+      </div>
+    </section>
+
+    <section class="grid-section" aria-labelledby="grid-title">
+      <header class="grid-section__header">
+        <h2 id="grid-title" data-i18n="trainingLibrary">Training library</h2>
+        <p class="grid-section__description" data-i18n="trainingLibraryDescription">
+          Browse the available sessions below. Select any card to launch the video player.
+        </p>
+      </header>
+
+      <div id="video-grid" class="video-grid" aria-live="polite">
+        <!-- Cards injected by main.js -->
+      </div>
+
+      <p id="no-videos-message" class="no-videos-message" data-i18n="noVideosMessage" hidden>
+        No videos are available yet. Please check back later.
+      </p>
+    </section>
+  </main>
+
+  <div id="video-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal__backdrop" id="modal-backdrop"></div>
+    <div class="modal__dialog">
+      <header class="modal__header">
+        <h2 id="modal-title" class="modal__title"></h2>
+        <button type="button" class="icon-button" id="modal-close" aria-label="Close video">
+          ✕
+        </button>
+      </header>
+      <div class="modal__body">
+        <div class="modal__player-container">
+          <div id="player-container" class="player-container" aria-label="Video player"></div>
+        </div>
+        <p class="modal__description" id="modal-description"></p>
+      </div>
+      <footer class="modal__footer">
+        <button class="secondary-button" type="button" id="modal-replay" data-i18n="replayVideo">
+          Replay video
+        </button>
+        <button class="primary-button" type="button" id="modal-close-footer" data-i18n="closePlayer">
+          Close player
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="scripts/theme.js"></script>
+  <script src="scripts/translate.js"></script>
+  <script src="scripts/analytics.js"></script>
+  <script src="scripts/player.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>
