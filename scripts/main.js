@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const modalTitleEl = document.getElementById("modal-title");
   const modalDescEl = document.getElementById("modal-description");
 
+  // 🔹 Make sure modal starts hidden even if the HTML attribute is missing
+  if (modalEl) {
+    modalEl.hidden = true;
+  }
+
   let settings = {};
   let videos = [];
   let currentVideo = null;
@@ -24,12 +29,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function loadData() {
-    [settings, videos] = await Promise.all([
-      loadJSON("data/settings.json"),
-      loadJSON("data/videos.json"),
-    ]);
+    settings = await loadJSON("data/settings.json");
+    videos = await loadJSON("data/videos.json");
 
-    SVT_Analytics.init(settings);
+    // Initialize analytics with settings
+    if (window.SVT_Analytics) {
+      SVT_Analytics.init(settings);
+    }
   }
 
   function buildVideoCard(video) {
@@ -102,10 +108,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   function renderGrid() {
     gridEl.innerHTML = "";
     if (!videos.length) {
-      noVideosEl.hidden = false;
+      if (noVideosEl) noVideosEl.hidden = false;
       return;
     }
-    noVideosEl.hidden = true;
+    if (noVideosEl) noVideosEl.hidden = true;
+
     videos.forEach((video) => {
       const card = buildVideoCard(video);
       gridEl.appendChild(card);
@@ -114,54 +121,57 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function openModal(video) {
     currentVideo = video;
-    modalTitleEl.textContent = video.title;
-    modalDescEl.textContent = video.description || "";
-    modalEl.hidden = false;
 
-    SVT_Player.playVideo(video.id, (event) => {
-      if (event.data === YT.PlayerState.PLAYING) {
-        SVT_Analytics.sendEvent({
-          videoId: video.id,
-          videoTitle: video.title,
-          eventType: "play",
-        });
-      } else if (event.data === YT.PlayerState.ENDED) {
-        SVT_Analytics.sendEvent({
-          videoId: video.id,
-          videoTitle: video.title,
-          eventType: "complete",
-        });
-      }
-    });
+    if (modalTitleEl) modalTitleEl.textContent = video.title;
+    if (modalDescEl) modalDescEl.textContent = video.description || "";
+
+    if (modalEl) modalEl.hidden = false;
+
+    // Load and autoplay video
+    SVT_Player.playVideo(video.id);
+
+    // Fire a "play" event to analytics
+    if (window.SVT_Analytics) {
+      SVT_Analytics.sendEvent({
+        videoId: video.id,
+        videoTitle: video.title,
+        eventType: "play",
+      });
+    }
   }
 
   function closeModal() {
-    modalEl.hidden = true;
+    if (modalEl) modalEl.hidden = true;
     SVT_Player.stop();
     currentVideo = null;
   }
 
   function replay() {
     if (!currentVideo) return;
-    SVT_Player.playVideo(currentVideo.id, () => {});
-    SVT_Analytics.sendEvent({
-      videoId: currentVideo.id,
-      videoTitle: currentVideo.title,
-      eventType: "replay",
-    });
+    SVT_Player.playVideo(currentVideo.id);
+
+    if (window.SVT_Analytics) {
+      SVT_Analytics.sendEvent({
+        videoId: currentVideo.id,
+        videoTitle: currentVideo.title,
+        eventType: "replay",
+      });
+    }
   }
 
-  modalBackdrop.addEventListener("click", closeModal);
-  modalCloseTop.addEventListener("click", closeModal);
-  modalCloseFooter.addEventListener("click", closeModal);
-  modalReplay.addEventListener("click", replay);
+  // Wire modal controls
+  if (modalBackdrop) modalBackdrop.addEventListener("click", closeModal);
+  if (modalCloseTop) modalCloseTop.addEventListener("click", closeModal);
+  if (modalCloseFooter) modalCloseFooter.addEventListener("click", closeModal);
+  if (modalReplay) modalReplay.addEventListener("click", replay);
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !modalEl.hidden) {
+    if (e.key === "Escape" && modalEl && !modalEl.hidden) {
       closeModal();
     }
   });
 
+  // CTA scroll-to-grid
   if (ctaStart) {
     ctaStart.addEventListener("click", () => {
       const gridSection = document.querySelector(".grid-section");
@@ -171,6 +181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Load config + videos and render
   try {
     await loadData();
     renderGrid();
