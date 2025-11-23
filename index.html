@@ -2,108 +2,160 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Charles Schwab — Video Training Samples</title>
+    <title>Schwab Video Training Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Styles -->
     <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" href="styles/theme.css" />
     <link rel="stylesheet" href="styles/layout.css" />
     <link rel="stylesheet" href="styles/components.css" />
-    <link rel="stylesheet" href="styles/theme.css" />
     <link rel="stylesheet" href="styles/responsive.css" />
   </head>
-
   <body>
-    <!-- ============================ -->
-    <!-- HEADER -->
-    <!-- ============================ -->
+    <!-- ==========================================================
+         HEADER
+         ========================================================== -->
     <header class="header">
       <div class="header__left">
         <img
           src="assets/img/logo-light.svg"
-          alt="Charles Schwab Logo"
+          alt="Charles Schwab logo"
           class="header__logo"
         />
-        <span class="header__title">Video Training Samples</span>
+        <div class="header__title">VIDEO TRAINING SAMPLES</div>
       </div>
 
       <div class="header__right">
-        <!-- Theme Toggle -->
-        <div class="theme-toggle">
-          <button id="theme-toggle-btn" class="header__button">Light</button>
-        </div>
+        <!-- Theme toggle -->
+        <button
+          id="theme-toggle-btn"
+          class="header__button"
+          type="button"
+          aria-pressed="false"
+        >
+          Light
+        </button>
 
-        <!-- Language Toggle -->
-        <div class="language-toggle">
-          <select id="language-select" class="header__button">
-            <option value="en">EN</option>
-            <option value="fr">FR</option>
-            <option value="es">ES</option>
-            <option value="ar">AR</option>
-          </select>
-        </div>
+        <!-- Language toggle -->
+        <select
+          id="language-select"
+          class="header__button"
+          aria-label="Select language"
+        >
+          <option value="en">EN</option>
+          <option value="fr">FR</option>
+          <option value="es">ES</option>
+          <option value="ar">AR</option>
+        </select>
       </div>
     </header>
 
-    <!-- ============================ -->
-    <!-- HERO SECTION -->
-    <!-- ============================ -->
-    <section class="hero">
-      <img
-        src="assets/img/hero-default.svg"
-        alt="Training Illustration"
-        class="hero__image"
-      />
+    <main>
+      <!-- ==========================================================
+           HERO (same background as page, card inside)
+           ========================================================== -->
+      <section class="hero">
+        <div class="hero-panel">
+          <!-- Left: illustration -->
+          <div class="hero__image-wrapper">
+            <img
+              src="assets/img/hero-default.svg"
+              alt="Video training dashboard illustration"
+              class="hero__image"
+            />
+          </div>
 
-      <div class="hero__content">
-        <h1 class="hero__title">
-          From concept to completion — structured training through real-world
-          video examples.
-        </h1>
-        <p class="hero__subtitle">
-          This template supports multi-language delivery, mobile optimization,
-          lightweight analytics, and WCAG accessibility.
-        </p>
+          <!-- Right: text + CTA -->
+          <div class="hero__content">
+            <h1 class="hero__title" data-i18n="hero.title">
+              From concept to completion — structured training through real-world
+              video examples.
+            </h1>
 
-        <button id="cta-start" class="btn btn-primary hero__cta">
-          Explore training videos
-        </button>
-      </div>
-    </section>
+            <p class="hero__subtitle text-muted" data-i18n="hero.subtitle">
+              This template supports multi-language delivery, mobile
+              optimization, lightweight analytics, and WCAG accessibility.
+            </p>
 
-    <!-- ============================ -->
-    <!-- VIDEO GRID SECTION -->
-    <!-- ============================ -->
-    <section class="grid-section">
-      <h2 class="section-title">Training Library</h2>
+            <div class="hero__cta-row">
+              <button
+                id="cta-start"
+                class="btn btn-primary hero__cta"
+                type="button"
+              >
+                <span data-i18n="hero.cta">Explore training videos</span>
+              </button>
+              <span class="hero__cta-hint" data-i18n="hero.hint">
+                Scroll or click to jump to the training library.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <p id="no-videos-message" hidden class="no-videos">
-        No videos available at this time.
-      </p>
+      <!-- ==========================================================
+           MAIN CONTENT SHELL (different background + shadow)
+           ========================================================== -->
+      <section class="content-shell">
+        <section
+          class="grid-section"
+          aria-labelledby="training-library-heading"
+          id="training-section"
+        >
+          <h2 id="training-library-heading" class="section-title">
+            <span data-i18n="library.title">Training Library</span>
+          </h2>
 
-      <div id="video-grid" class="video-grid"></div>
-    </section>
+          <p class="text-muted" data-i18n="library.description">
+            Browse Schwab sample videos used for this training template.
+          </p>
 
-    <!-- ============================ -->
-    <!-- MODAL PLAYER -->
-    <!-- ============================ -->
-    <div id="video-modal" class="modal" hidden aria-hidden="true">
-      <div id="modal-backdrop" class="modal__backdrop"></div>
+          <div id="video-grid" class="video-grid" role="list">
+            <!-- Cards populated by scripts/main.js using data/videos.json -->
+          </div>
 
-      <div class="modal__dialog" role="dialog" aria-modal="true">
+          <p id="no-videos-message" class="no-videos" hidden>
+            <span data-i18n="library.empty">
+              No videos are configured yet. Add YouTube URLs to data/videos.json.
+            </span>
+          </p>
+        </section>
+      </section>
+    </main>
+
+    <!-- ==========================================================
+         VIDEO MODAL PLAYER
+         ========================================================== -->
+    <section
+      id="video-modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="video-modal-title"
+      hidden
+    >
+      <div class="modal__backdrop"></div>
+
+      <div class="modal__dialog">
         <header class="modal__header">
-          <h2 id="modal-title" class="modal__title">Video Title</h2>
-
+          <h2 id="video-modal-title" class="modal__title">
+            Schwab Training Sample
+          </h2>
           <button
             id="modal-close"
             class="modal__close"
             type="button"
-            aria-label="Close player"
+            aria-label="Close video"
           >
             ×
           </button>
         </header>
 
         <div class="modal__body">
-          <p id="modal-description" class="modal__description"></p>
+          <p id="video-modal-description" class="modal__description text-muted">
+            Sample Schwab training video used for the template.
+          </p>
 
           <div class="modal__player-container">
             <div id="player-container" class="player-container"></div>
@@ -111,24 +163,33 @@
         </div>
 
         <footer class="modal__footer">
-          <button id="modal-replay" class="btn btn-secondary">
+          <button
+            id="modal-replay"
+            class="btn"
+            type="button"
+            data-i18n="modal.replay"
+          >
             Replay video
           </button>
-
-          <button id="modal-close-footer" class="btn btn-primary">
+          <button
+            id="modal-close-footer"
+            class="btn btn-primary"
+            type="button"
+            data-i18n="modal.close"
+          >
             Close player
           </button>
         </footer>
       </div>
-    </div>
+    </section>
 
-    <!-- ============================ -->
-    <!-- SCRIPTS -->
-    <!-- ============================ -->
-    <script src="scripts/theme.js"></script>
-    <script src="scripts/translate.js"></script>
+    <!-- ==========================================================
+         SCRIPTS
+         ========================================================== -->
     <script src="scripts/analytics.js"></script>
     <script src="scripts/player.js"></script>
+    <script src="scripts/theme.js"></script>
+    <script src="scripts/translate.js"></script>
     <script src="scripts/main.js"></script>
   </body>
 </html>
