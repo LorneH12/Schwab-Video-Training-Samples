@@ -200,3 +200,10 @@ html[data-theme="dark"] .site-header {
   position: absolute;
   inset: 0;
 }
+
+.player-container iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
