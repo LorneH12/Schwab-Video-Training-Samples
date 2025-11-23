@@ -1,31 +1,103 @@
-// Theme toggle: light <-> dark, persisted in localStorage
+/* THEME TOKENS
+   ------------------------------------------------------------------- */
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("theme-toggle-btn");
-  if (!btn) return;
+:root {
+  /* Surfaces */
+  --color-bg: #e9f1fb;
+  --color-bg-page: #f4f7fb;
+  --color-surface: #ffffff;
+  --color-hero-surface: #ffffff;
 
-  const THEME_KEY = "svt-theme";
+  /* Text */
+  --color-text: #0b1120;
+  --color-text-muted: #6b7280;
 
-  function applyTheme(theme) {
-    const isDark = theme === "dark";
-    document.body.classList.toggle("dark-theme", isDark);
-    btn.textContent = isDark ? "Dark" : "Light";
-    localStorage.setItem(THEME_KEY, theme);
-  }
+  /* Accent */
+  --color-accent: #0067b8;
+  --color-accent-soft: #e0f2ff;
 
-  // Initial theme – from storage or prefers-color-scheme
-  const stored = localStorage.getItem(THEME_KEY);
-  if (stored === "dark" || stored === "light") {
-    applyTheme(stored);
-  } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    applyTheme("dark");
-  } else {
-    applyTheme("light");
-  }
+  /* Borders / shadows */
+  --color-border-subtle: rgba(148, 163, 184, 0.45);
+  --shadow-soft: 0 22px 55px rgba(15, 23, 42, 0.16);
 
-  btn.addEventListener("click", () => {
-    const current = document.body.classList.contains("dark-theme") ? "dark" : "light";
-    const next = current === "dark" ? "light" : "dark";
-    applyTheme(next);
-  });
-});
+  --radius-lg: 32px;
+  --radius-md: 22px;
+  --radius-sm: 999px;
+}
+
+/* DARK THEME OVERRIDES
+   ------------------------------------------------------------------- */
+
+body.dark-theme {
+  --color-bg: #020617;
+  --color-bg-page: #020617;
+  --color-surface: #020617;
+  --color-hero-surface: #020617;
+
+  --color-text: #e5e7eb;
+  --color-text-muted: #9ca3af;
+
+  --color-accent: #38bdf8;
+  --color-accent-soft: rgba(56, 189, 248, 0.16);
+
+  --color-border-subtle: rgba(148, 163, 184, 0.4);
+  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
+}
+
+/* GLOBAL APPLICATION
+   ------------------------------------------------------------------- */
+
+body {
+  background: radial-gradient(circle at top left, #dbeafe 0, var(--color-bg-page) 45%, #e5ecff 100%);
+  color: var(--color-text);
+  transition: background 240ms ease, color 180ms ease;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+body.dark-theme {
+  background: radial-gradient(circle at top left, #0f172a 0, #020617 55%, #020617 100%);
+}
+
+/* ELEVATED SURFACES
+   ------------------------------------------------------------------- */
+
+.header,
+.hero-panel,
+.video-card,
+.modal__dialog {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* Hero panel gets its own surface token */
+.hero-panel {
+  background: var(--color-hero-surface);
+}
+
+/* Primary button */
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #004c87;
+  border-color: #004c87;
+}
+
+body.dark-theme .btn-primary:hover {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+/* Muted text / accent chips */
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.pill-accent {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
