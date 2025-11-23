@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bulk Video Upload Helper</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/theme.css" />
+  <link rel="stylesheet" href="../styles/layout.css" />
+  <link rel="stylesheet" href="../styles/components.css" />
+</head>
+<body>
+  <main class="grid-section">
+    <header class="grid-section__header">
+      <h1>Bulk video helper</h1>
+      <p>Paste one YouTube URL per line and copy the generated JSON for videos.json.</p>
+    </header>
+    <section style="display:grid; gap:1rem; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); align-items:start;">
+      <textarea id="urls-input" rows="16" style="width:100%;"></textarea>
+      <textarea id="json-output" rows="16" style="width:100%;"></textarea>
+    </section>
+    <button class="primary-button" id="generate">Generate JSON</button>
+  </main>
+
+  <script>
+    function extractId(url) {
+      if (!url) return "";
+      const vIndex = url.indexOf("v=");
+      if (vIndex !== -1) {
+        return url.slice(vIndex + 2).split("&")[0];
+      }
+      return url.split("/").pop();
+    }
+
+    document.getElementById("generate").addEventListener("click", () => {
+      const raw = document.getElementById("urls-input").value.split(/\n+/);
+      const videos = raw
+        .map((line, idx) => line.trim())
+        .filter(Boolean)
+        .map((url, idx) => {
+          const id = extractId(url);
+          return {
+            id,
+            url,
+            title: "Training Video " + (idx + 1),
+            series: "Custom Series",
+            length: "",
+            description: "Training video loaded via bulk helper.",
+            thumbnail: ""
+          };
+        });
+      document.getElementById("json-output").value = JSON.stringify(videos, null, 2);
+    });
+  </script>
+</body>
+</html>
