@@ -1,18 +1,22 @@
-/* THEME TOKENS
-   ------------------------------------------------------------------- */
+/* =======================================================================
+   THEME TOKENS
+   Schwab-inspired light/dark theme + surface system
+   ======================================================================= */
 
 :root {
-  /* Surfaces */
+  /* Page backgrounds */
   --color-bg: #e9f1fb;
   --color-bg-page: #f4f7fb;
+
+  /* Surfaces (cards, header, hero panel, etc.) */
   --color-surface: #ffffff;
-  --color-hero-surface: #ffffff;
+  --color-hero-surface: #ffffff; /* distinct hero card surface */
 
   /* Text */
   --color-text: #0b1120;
   --color-text-muted: #6b7280;
 
-  /* Accent */
+  /* Accent / brand */
   --color-accent: #0067b8;
   --color-accent-soft: #e0f2ff;
 
@@ -20,19 +24,21 @@
   --color-border-subtle: rgba(148, 163, 184, 0.45);
   --shadow-soft: 0 22px 55px rgba(15, 23, 42, 0.16);
 
+  /* Radii */
   --radius-lg: 32px;
   --radius-md: 22px;
   --radius-sm: 999px;
 }
 
-/* DARK THEME OVERRIDES
-   ------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   DARK THEME OVERRIDES
+   ----------------------------------------------------------------------- */
 
 body.dark-theme {
   --color-bg: #020617;
   --color-bg-page: #020617;
   --color-surface: #020617;
-  --color-hero-surface: #020617;
+  --color-hero-surface: #020617; /* hero card stays distinct but darker */
 
   --color-text: #e5e7eb;
   --color-text-muted: #9ca3af;
@@ -44,38 +50,65 @@ body.dark-theme {
   --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
 }
 
-/* GLOBAL APPLICATION
-   ------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   GLOBAL APPLICATION
+   ----------------------------------------------------------------------- */
 
 body {
-  background: radial-gradient(circle at top left, #dbeafe 0, var(--color-bg-page) 45%, #e5ecff 100%);
+  background: radial-gradient(
+      circle at top left,
+      #dbeafe 0,
+      var(--color-bg-page) 45%,
+      #e5ecff 100%
+    );
   color: var(--color-text);
-  transition: background 240ms ease, color 180ms ease;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  transition:
+    background 240ms ease,
+    color 180ms ease;
 }
 
 body.dark-theme {
-  background: radial-gradient(circle at top left, #0f172a 0, #020617 55%, #020617 100%);
+  background: radial-gradient(
+      circle at top left,
+      #0f172a 0,
+      #020617 55%,
+      #020617 100%
+    );
 }
 
-/* ELEVATED SURFACES
-   ------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   ELEVATED SURFACES (cards, header, hero card, modal)
+   ----------------------------------------------------------------------- */
 
 .header,
 .hero-panel,
 .video-card,
 .modal__dialog {
   background: var(--color-surface);
-  box-shadow: var(--shadow-soft);
   border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-soft);
 }
 
-/* Hero panel gets its own surface token */
+/* Hero panel gets its own surface token so it can be tinted separately */
 .hero-panel {
   background: var(--color-hero-surface);
 }
 
-/* Primary button */
+/* -----------------------------------------------------------------------
+   COMMON UTILS
+   ----------------------------------------------------------------------- */
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.pill-accent {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* Primary action button */
 .btn-primary {
   background: var(--color-accent);
   border-color: var(--color-accent);
@@ -90,14 +123,4 @@ body.dark-theme {
 body.dark-theme .btn-primary:hover {
   background: #0ea5e9;
   border-color: #0ea5e9;
-}
-
-/* Muted text / accent chips */
-.text-muted {
-  color: var(--color-text-muted);
-}
-
-.pill-accent {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
 }
