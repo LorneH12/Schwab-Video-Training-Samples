@@ -1,64 +1,34 @@
-// YouTube IFrame API wrapper for the modal player
+// Simple YouTube iframe embed without the YouTube IFrame API.
+// This avoids a lot of edge cases and just uses the standard player.
 
 const SVT_Player = (function () {
-  let apiReady = false;
-  let player = null;
-  let pendingVideoId = null;
+  function playVideo(videoId) {
+    const container = document.getElementById("player-container");
+    if (!container || !videoId) return;
 
-  function loadAPI() {
-    return new Promise((resolve) => {
-      if (apiReady) return resolve();
-      const existing = document.getElementById("youtube-iframe-api");
-      if (existing) return resolve();
+    const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
 
-      const tag = document.createElement("script");
-      tag.id = "youtube-iframe-api";
-      tag.src = "https://www.youtube.com/iframe_api";
-      window.onYouTubeIframeAPIReady = function () {
-        apiReady = true;
-        resolve();
-      };
-      document.head.appendChild(tag);
-    });
-  }
-
-  function createOrLoad(videoId, onStateChange) {
-    pendingVideoId = videoId;
-
-    loadAPI().then(() => {
-      const container = document.getElementById("player-container");
-      if (!container) return;
-
-      if (!player) {
-        player = new YT.Player("player-container", {
-          videoId,
-          playerVars: {
-            autoplay: 1,
-            controls: 1,
-            rel: 0,
-          },
-          events: {
-            onStateChange: (event) => {
-              if (typeof onStateChange === "function") {
-                onStateChange(event);
-              }
-            },
-          },
-        });
-      } else {
-        player.loadVideoById(videoId);
-      }
-    });
+    container.innerHTML = `
+      <iframe
+        src="${src}"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        style="width:100%;height:100%;display:block;"
+      ></iframe>
+    `;
   }
 
   function stop() {
-    if (player) {
-      player.stopVideo();
-    }
+    const container = document.getElementById("player-container");
+    if (!container) return;
+    // Remove the iframe to stop playback
+    container.innerHTML = "";
   }
 
   return {
-    playVideo: createOrLoad,
+    playVideo,
     stop,
   };
 })();
