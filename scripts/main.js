@@ -13,9 +13,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const modalTitleEl = document.getElementById("modal-title");
   const modalDescEl = document.getElementById("modal-description");
 
-  // 🔹 Make sure modal starts hidden even if the HTML attribute is missing
+  // 🔹 Force modal to start hidden
   if (modalEl) {
     modalEl.hidden = true;
+    modalEl.setAttribute("aria-hidden", "true");
   }
 
   let settings = {};
@@ -30,9 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function loadData() {
     settings = await loadJSON("data/settings.json");
-    videos = await loadJSON("data/videos.json");
+    const videoData = await loadJSON("data/videos.json");
+    videos = videoData.videos || videoData || [];
 
-    // Initialize analytics with settings
     if (window.SVT_Analytics) {
       SVT_Analytics.init(settings);
     }
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     card.className = "video-card";
     card.tabIndex = 0;
     card.setAttribute("role", "button");
-    card.setAttribute("aria-label", video.title + " – open video player");
+    card.setAttribute("aria-label", `${video.title} – open video player`);
 
     card.dataset.videoId = video.id;
 
@@ -106,7 +107,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function renderGrid() {
+    if (!gridEl) return;
     gridEl.innerHTML = "";
+
     if (!videos.length) {
       if (noVideosEl) noVideosEl.hidden = false;
       return;
@@ -125,12 +128,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (modalTitleEl) modalTitleEl.textContent = video.title;
     if (modalDescEl) modalDescEl.textContent = video.description || "";
 
-    if (modalEl) modalEl.hidden = false;
+    if (modalEl) {
+      modalEl.hidden = false;
+      modalEl.setAttribute("aria-hidden", "false");
+    }
 
-    // Load and autoplay video
     SVT_Player.playVideo(video.id);
 
-    // Fire a "play" event to analytics
     if (window.SVT_Analytics) {
       SVT_Analytics.sendEvent({
         videoId: video.id,
@@ -141,7 +145,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function closeModal() {
-    if (modalEl) modalEl.hidden = true;
+    if (modalEl) {
+      modalEl.hidden = true;
+      modalEl.setAttribute("aria-hidden", "true");
+    }
     SVT_Player.stop();
     currentVideo = null;
   }
@@ -181,7 +188,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Load config + videos and render
   try {
     await loadData();
     renderGrid();
