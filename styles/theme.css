@@ -1,118 +1,31 @@
-/* THEME TOKENS
-   ------------------------------------------------------------------- */
+// Theme toggle: light <-> dark, persisted in localStorage
 
-:root {
-  --color-bg: #f4f7fb;
-  --color-bg-elevated: #ffffff;
-  --color-bg-soft: #e5efff;
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("theme-toggle-btn");
+  if (!btn) return;
 
-  --color-text: #111827;
-  --color-text-muted: #6b7280;
+  const THEME_KEY = "svt-theme";
 
-  --color-accent: #0067b8;
-  --color-accent-soft: #e0f2ff;
+  function applyTheme(theme) {
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark-theme", isDark);
+    btn.textContent = isDark ? "Dark" : "Light";
+    localStorage.setItem(THEME_KEY, theme);
+  }
 
-  --color-border-subtle: #e5e7eb;
+  // Initial theme – from storage or prefers-color-scheme
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored === "dark" || stored === "light") {
+    applyTheme(stored);
+  } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    applyTheme("dark");
+  } else {
+    applyTheme("light");
+  }
 
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --radius-sm: 999px;
-
-  --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.16);
-}
-
-/* DARK THEME OVERRIDES
-   body.dark-theme swaps these variables globally
-------------------------------------------------------------------- */
-
-body.dark-theme {
-  --color-bg: #020617;
-  --color-bg-elevated: #020617;
-  --color-bg-soft: #020617;
-
-  --color-text: #e5e7eb;
-  --color-text-muted: #9ca3af;
-
-  --color-accent: #38bdf8;
-  --color-accent-soft: rgba(56, 189, 248, 0.16);
-
-  --color-border-subtle: rgba(148, 163, 184, 0.4);
-
-  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
-}
-
-/* GLOBAL APPLICATION
-------------------------------------------------------------------- */
-
-body {
-  background: radial-gradient(circle at top left, #e0f2ff 0, #f4f7fb 40%, #e5ecff 100%);
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  transition: background 240ms ease, color 180ms ease;
-}
-
-/* In dark mode, subtle vignette */
-body.dark-theme {
-  background: radial-gradient(circle at top left, #0f172a 0, #020617 55%, #020617 100%);
-}
-
-/* HEADER & HERO COLORS */
-
-.header {
-  background: linear-gradient(90deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.92));
-  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-body.dark-theme .header {
-  background: linear-gradient(90deg, rgba(15, 23, 42, 0.98), #020617);
-}
-
-.hero {
-  background: radial-gradient(circle at top left, rgba(191, 219, 254, 0.25), transparent 60%),
-    transparent;
-}
-
-body.dark-theme .hero {
-  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 65%),
-    transparent;
-}
-
-/* ELEVATED SURFACES */
-
-.video-card,
-.modal__dialog {
-  background: var(--color-bg-elevated);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--color-border-subtle);
-}
-
-.btn-primary {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-.btn-primary:hover {
-  background: #004c87;
-  border-color: #004c87;
-}
-
-body.dark-theme .btn-primary {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-body.dark-theme .btn-primary:hover {
-  background: #0ea5e9;
-  border-color: #0ea5e9;
-}
-
-/* TEXT MUTING / ACCENTS */
-
-.text-muted {
-  color: var(--color-text-muted);
-}
-
-.pill-accent {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-}
+  btn.addEventListener("click", () => {
+    const current = document.body.classList.contains("dark-theme") ? "dark" : "light";
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+  });
+});
